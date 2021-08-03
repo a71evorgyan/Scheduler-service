@@ -6,7 +6,6 @@ import Router from "./routes";
 import { Container } from "typedi";
 import { userData } from "./models";
 
-
 // Create Express server
 const app = express();
 
