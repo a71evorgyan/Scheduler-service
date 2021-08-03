@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import {
-  processbookSlots,
+  processBookSlots,
   processCreateWoringTimeSlots, processSearchUser, processviewAvailableSlots, processViewBookedSlots,
 } from "../services";
 
@@ -33,7 +33,7 @@ export const viewAvailableSlots = async (req: Request, res: Response, next: Next
 
 export const bookSlots = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
-    const result = await processbookSlots(req);
+    const result = await processBookSlots(req);
     return res.status(200).json(result);
   } catch (err) {
     next(err);

@@ -5,10 +5,11 @@ import { BookSlotsRequest, CreateUserWoringTimeSlots, SearchUserRequest, ViewAva
 
 const router = express.Router();
 
-router.post("/createUserWoringTimeSlots", validationBodyMiddleware(CreateUserWoringTimeSlots), createWoringTimeSlots);
-router.post("/searchUser", validationBodyMiddleware(SearchUserRequest), searchUser);
+router.get("/searchUser", validationBodyMiddleware(SearchUserRequest), searchUser);
 router.get("/viewAvailableSlots", validationBodyMiddleware(ViewAvailableSlotsRequest), viewAvailableSlots);
-router.get("/bookSlots", validationBodyMiddleware(BookSlotsRequest), bookSlots);
-router.get("/viewBookedSlots", validationBodyMiddleware(ViewBookedSlotsRequest), viewBookedSlots)
+router.get("/viewBookedSlots", validationBodyMiddleware(ViewBookedSlotsRequest), viewBookedSlots);
+
+router.post("/createUserWoringTimeSlots", validationBodyMiddleware(CreateUserWoringTimeSlots), createWoringTimeSlots);
+router.post("/bookSlots", validationBodyMiddleware(BookSlotsRequest), bookSlots);
 
 export default router;

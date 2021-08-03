@@ -5,7 +5,14 @@ export class BookSlotsRequest {
   @IsNotEmpty()
   userId!: string;
 
+  @IsString()
+  @IsNotEmpty()
+  ownerId!: string;
+
+  @IsNotEmpty()
+  day!: string;
+
   @IsNotEmpty()
   @IsString()
-  timeSlotDuration!: string;
+  timeSlot!: string;
 }
