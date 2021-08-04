@@ -31,8 +31,8 @@ export const updateUserData = (userData: { user: UserDataProps, day: string, sta
     createAndUpdateWorkingDay(userId, day, start, end, timeSlotDuration);
   } else {
     const isExistingBookedSlot = checkExistingBookedSlot(existingWorkingDay.timeSlots);
-    if (isExistingBookedSlot) throw new Error("You can't change your working hours, there is an already booked slot"); // move message TODO or just do nothing
-    updateExistingWorkingDay(userId, day, start, end, timeSlotDuration);
+    if (!isExistingBookedSlot)
+      updateExistingWorkingDay(userId, day, start, end, timeSlotDuration);
   }
 }
 

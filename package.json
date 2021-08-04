@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "lint": "tslint -c tslint.json -p tsconfig.json --fix",
-    "start:ts": "ts-node src/server.ts",
-    "start": "yarn run serve",
     "build": "rm -rf dist/src/* && yarn run build-ts && yarn run lint",
+    "serve": "node dist/src/server.js",
+    "start": "yarn build && yarn run serve",
     "build-ts": "tsc",
-    "serve": "node dist/src/server.js"
+    "start:ts": "ts-node src/server.ts"
   },
   "author": "",
   "license": "ISC",

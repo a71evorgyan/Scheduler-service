@@ -3,7 +3,6 @@ import { Type } from "class-transformer";
 import { INVALID_USER_NAME, INVALID_WORKING_HOURS } from "../exceptions";
 import { UserName } from "./user-name";
 import { WorkingHours } from "./working-hours";
-
 export class CreateUserWoringTimeSlots {
 
   @ValidateNested()

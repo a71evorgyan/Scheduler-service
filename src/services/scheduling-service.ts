@@ -1,9 +1,9 @@
 import { Request } from "express";
 import moment from "moment";
-import { filter, find, map, reduce } from "lodash";
+import { filter, find, reduce } from "lodash";
 import { getWorkingday, SlotStatus, updateUserBookedSlotsData, updateUserData } from "../utils";
-import { getUserDataModel, TimeSlot, UserDataProps } from "../models";
-
+import { BookedSlot, getUserDataModel, TimeSlot, UserDataProps } from "../models";
+import { SLOT_BOOKED } from "../exceptions";
 
 export const processCreateWoringTimeSlots = async (request: Request): Promise<void> => {
   try {
@@ -78,9 +78,10 @@ export const processBookSlots = async (request: Request): Promise<void> => {
       return acc;
     }, { newTimeSlots: [], isSlotBooked: false });
 
-    if (isSlotBooked) throw new Error("Slot already booked"); // tODO
-      await userDataModel.updateOne({ _id: ownerId, "workingDays.day": day }, { $set: { "workingDays.$.timeSlots": newTimeSlots }});
-      await updateUserBookedSlotsData(ownerId, userId, day, timeSlot); // fix naming
+    if (isSlotBooked) throw new Error(SLOT_BOOKED);
+
+    await userDataModel.updateOne({ _id: ownerId, "workingDays.day": day }, { $set: { "workingDays.$.timeSlots": newTimeSlots }});
+    await updateUserBookedSlotsData(ownerId, userId, day, timeSlot);
 
   } catch (e) {
     console.error(`functionName: processBookSlots - errorMessage: '${e.message}'`);
@@ -88,7 +89,7 @@ export const processBookSlots = async (request: Request): Promise<void> => {
   }
 };
 
-export const processViewBookedSlots = async (request: Request): Promise<any> => {
+export const processViewBookedSlots = async (request: Request): Promise<BookedSlot[]> => {
   try {
     const userDataModel = getUserDataModel();
     const { userId, day } = request?.body;
