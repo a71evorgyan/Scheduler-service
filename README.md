@@ -17,5 +17,5 @@ Please use the following format for dates
     "start": "2021-08-03T10:00:00",
     "end": "2021-08-03T15:05:00"
 ### Tech stack
-`TypeScript, Express, MongoDb`
+`TypeScript, Express, MongoDB`
 
