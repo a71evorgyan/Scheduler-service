@@ -3,7 +3,7 @@ import moment from "moment";
 import { filter, find, reduce } from "lodash";
 import { getWorkingday, SlotStatus, updateUserBookedSlotsData, updateUserData } from "../utils";
 import { BookedSlot, getUserDataModel, TimeSlot, UserDataProps } from "../models";
-import { SLOT_BOOKED } from "../exceptions";
+import { SLOT_ALREADY_BOOKED } from "../exceptions";
 
 export const processCreateWoringTimeSlots = async (request: Request): Promise<void> => {
   try {
@@ -67,18 +67,20 @@ export const processBookSlots = async (request: Request): Promise<void> => {
     const { workingDays } = await userDataModel.findById(ownerId);
     const foundWorkingDay = find(workingDays, workingDay => workingDay.day === day);
 
-    const { newTimeSlots, isSlotBooked } = reduce(foundWorkingDay.timeSlots, (acc, slot) => {
+    const { newTimeSlots, isSelectedSlotBooked } = reduce(foundWorkingDay.timeSlots, (slots, slot) => {
       if (slot.value === timeSlot) {
         const isBooked = slot.status === SlotStatus.booked;
-        slot.status = isBooked ? slot.status : SlotStatus.booked;
-        acc.newTimeSlots.push(slot);
-        return { ...acc, isSlotBooked: isBooked };
+        if (!isBooked) {
+          slot.status = SlotStatus.booked;
+          slots.newTimeSlots.push(slot);
+        }
+        return { ...slots, isSelectedSlotBooked: isBooked };
       }
-      acc.newTimeSlots.push(slot);
-      return acc;
-    }, { newTimeSlots: [], isSlotBooked: false });
+      slots.newTimeSlots.push(slot);
+      return slots;
+    }, { newTimeSlots: [], isSelectedSlotBooked: false });
 
-    if (isSlotBooked) throw new Error(SLOT_BOOKED);
+    if (isSelectedSlotBooked) throw new Error(SLOT_ALREADY_BOOKED);
 
     await userDataModel.updateOne({ _id: ownerId, "workingDays.day": day }, { $set: { "workingDays.$.timeSlots": newTimeSlots }});
     await updateUserBookedSlotsData(ownerId, userId, day, timeSlot);
